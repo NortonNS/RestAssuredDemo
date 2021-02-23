@@ -1,0 +1,39 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'eclipse'
+	id 'java'
+	id 'war'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	restAssuredVersion = '3.0.7'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation "io.rest-assured:rest-assured:$restAssuredVersion"
+//	testImplementation "org.junit.jupiter:junit-jupiter-api:5.4.2"
+//	testImplementation "io.rest-assured:json-path:$restAssuredVersion"
+//	testImplementation "io.rest-assured:xml-path:$restAssuredVersion"
+//	testImplementation "io.rest-assured:json-schema-validator:$restAssuredVersion"
+//	testImplementation "io.rest-assured:spring-mock-mvc:$restAssuredVersion"
+//	testImplementation "io.rest-assured:spring-web-test-client:$restAssuredVersion"
+
+//	testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+}
+
+test {
+	useJUnitPlatform()
+}

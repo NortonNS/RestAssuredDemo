@@ -1,38 +1,44 @@
 package com.example.restassureddemo;
 
+import io.restassured.http.ContentType;
 import org.springframework.util.Assert;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.hamcrest.Matchers.hasSize;
 
 public class myFirstRestAssuredClass {
     final static String url="http://demo.guru99.com/V4/sinkministatement.php?CUSTOMER_ID=68195&PASSWORD=1234!&Account_No=1";
-    final static long responseTimeThreshold = 100; // milliseconds
+    final static String irl="http://demo.guru99.com/V4/sinkministatement.php";
+    final static long responseTimeThreshold = 500; // milliseconds
     final static int successfulStatusCode = 200;
 
-    public static void main(String args[]) throws Exception {
-        getResponseBody();
+    public static void main(String args[]) {
+    	getTesting();
         getResponseStatus();
         getResponseTime();
     }
 
-    //This will fetch the response body as is and log it. given and when are optional here
-    public static void getResponseBody(){
-        given().when().get(url).then().log()
-                .all();
-
-        given().queryParam("CUSTOMER_ID","68195")
-                .queryParam("PASSWORD","1234!")
-                .queryParam("Account_No","1")
-                .when().get("http://demo.guru99.com/V4/sinkministatement.php").then().log().body();
+    public static void getTesting() {
+    	given()
+                .pathParam("raceSeason","2017")
+                .when()
+                .get("http://ergast.com/api/f1/{raceSeason}/circuits.json")
+                .then()
+                .assertThat()
+                    .statusCode(200)
+                .and()
+                    .contentType(ContentType.JSON).
+                and()
+                    .body("MRData.CircuitTable.Circuits.circuitId",hasSize(20));
     }
-
+    
     public static void getResponseStatus(){
         int statusCode= given().queryParam("CUSTOMER_ID","68195")
                 .queryParam("PASSWORD","1234!")
                 .queryParam("Account_No","1")
-                .when().get("http://demo.guru99.com/V4/sinkministatement.php").getStatusCode();
+                .when().get(irl).getStatusCode();
         System.out.println("The response status is "+statusCode);
 
         Assert.isTrue(statusCode == successfulStatusCode,
@@ -40,7 +46,7 @@ public class myFirstRestAssuredClass {
     }
 
     // Check to ensure response time is within acceptable limits.
-    public static void getResponseTime() throws Exception {
+    public static void getResponseTime()  {
         long responseTime = get(url).timeIn(MILLISECONDS);
         System.out.println("The time taken to fetch the response "+ responseTime + " milliseconds");
 
